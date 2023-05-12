@@ -1,13 +1,15 @@
 import { Plugin, PluginID } from '@/types/plugin';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export const getEndpoint = (plugin: Plugin | null) => {
   if (!plugin) {
-    return 'api/chat';
+    return `${basePath}/api/chat`;
   }
 
   if (plugin.id === PluginID.GOOGLE_SEARCH) {
-    return 'api/google';
+    return `${basePath}/api/google`;
   }
 
-  return 'api/chat';
+  return `${basePath}/api/chat`;
 };
