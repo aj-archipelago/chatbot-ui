@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useFetch } from '@/hooks/useFetch';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/chatgpt';
 export interface GetModelsRequestProps {
   key: string;
 }

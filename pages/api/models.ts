@@ -49,18 +49,27 @@ const handler = async (req: Request): Promise<Response> => {
     const json = await response.json();
 
     const models: OpenAIModel[] = json.data
-      .map((model: any) => {
-        const model_name = (OPENAI_API_TYPE === 'azure') ? model.model : model.id;
-        for (const [key, value] of Object.entries(OpenAIModelID)) {
-          if (value === model_name) {
-            return {
-              id: model.id,
-              name: OpenAIModels[value].name,
-            };
-          }
+    .map((model: any) => {
+      const model_name = (OPENAI_API_TYPE === 'azure') ? model.model : model.id;
+      let model_id = model.id;
+      let model_name_from_enum = model_name.toUpperCase();
+      let model_maxLength = 12000; // default value
+      let model_tokenLimit = 4000; // default value
+      for (const [key, value] of Object.entries(OpenAIModelID)) {
+        if (value === model_name) {
+          model_name_from_enum = OpenAIModels[value].name;
+          model_maxLength = OpenAIModels[value].maxLength;
+          model_tokenLimit = OpenAIModels[value].tokenLimit;
+          break;
         }
-      })
-      .filter(Boolean);
+      }
+      return {
+        id: model_id,
+        name: model_name_from_enum,
+        maxLength: model_maxLength,
+        tokenLimit: model_tokenLimit,
+      };
+    });
 
     return new Response(JSON.stringify(models), { status: 200 });
   } catch (error) {

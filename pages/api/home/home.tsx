@@ -181,16 +181,22 @@ const Home = ({
   const handleNewConversation = () => {
     const lastConversation = conversations[conversations.length - 1];
 
+    const lastModel = lastConversation?.model;
+    const defaultModel = OpenAIModels[defaultModelId];
+    const specificModel = lastModel?.id ? OpenAIModels[lastModel.id as OpenAIModelID] : undefined;
+  
+    const modelToUse = {
+      id: lastModel?.id || defaultModel.id,
+      name: lastModel?.name || specificModel?.name || defaultModel.name,
+      maxLength: lastModel?.maxLength || specificModel?.maxLength || defaultModel.maxLength,
+      tokenLimit: lastModel?.tokenLimit || specificModel?.tokenLimit || defaultModel.tokenLimit,
+    };
+  
     const newConversation: Conversation = {
       id: uuidv4(),
       name: t('New Conversation'),
       messages: [],
-      model: lastConversation?.model || {
-        id: OpenAIModels[defaultModelId].id,
-        name: OpenAIModels[defaultModelId].name,
-        maxLength: OpenAIModels[defaultModelId].maxLength,
-        tokenLimit: OpenAIModels[defaultModelId].tokenLimit,
-      },
+      model: modelToUse,
       prompt: DEFAULT_SYSTEM_PROMPT,
       temperature: lastConversation?.temperature ?? DEFAULT_TEMPERATURE,
       folderId: null,

@@ -3,7 +3,7 @@ include .env
 .PHONY: all
 
 build:
-	docker build -t chatbot-ui .
+	docker build --platform linux/amd64 -t chatbot-ui .
 
 run:
 	export $(cat .env | xargs)
